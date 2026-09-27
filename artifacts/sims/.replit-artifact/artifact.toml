@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Student Information Management System"
+description = "A full-stack student information and management system for administrators, teachers, and families to manage student profiles, grades, attendance, alerts, and academic insights."
+version = "1.0.0"
+id = "artifacts/sims"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18667
+
+[services.development]
+run = "pnpm --filter @workspace/sims run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sims", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sims/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18667"
+BASE_PATH = "/"

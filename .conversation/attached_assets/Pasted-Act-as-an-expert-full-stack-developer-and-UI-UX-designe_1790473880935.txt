@@ -1,0 +1,46 @@
+Act as an expert full-stack developer and UI/UX designer. I want you to build a modern, full-stack Student Information and Management System (SIMS) web application. 
+
+Please use the following tech stack for the best performance and modern UI: Next.js (App Router), Tailwind CSS, shadcn/ui for components, and Prisma with SQLite (for easy local setup) or PostgreSQL.
+
+### 1. Core Functionality (Monitor & Control)
+Build a robust CRUD system to manage student information:
+- **Student Profiles:** Name, Student ID, Date of Birth, Contact Info, Emergency Contacts, Enrollment Status.
+- **Academic Records:** Track current classes, GPA, and individual subject grades.
+- **Attendance Tracking:** Daily check-in/check-out, marking present/absent/late/excused.
+- **Behavioral/Disciplinary Logs:** Add notes, warnings, or achievements to a student's profile.
+
+### 2. Enhanced Features (The "Wow" Factor)
+Go beyond basic CRUD and implement these advanced features:
+- **Analytics Dashboard:** A visual dashboard for admins/teachers showing overall attendance rates, average GPA trends, and at-risk student metrics. Use a charting library like Recharts.
+- **Role-Based Access Control (RBAC):** Create three distinct views: 
+  1. *Admin:* Full access to all data and settings.
+  2. *Teacher:* Can only view and edit grades/attendance for their specific assigned classes.
+  3. *Student/Parent:* Read-only access to their own grades, attendance, and schedule.
+- **Smart Alerts & Notifications:** A notification bell in the navbar that triggers alerts for things like "Student missed 3 consecutive days" or "Grade dropped below C-".
+- **Advanced Search & Filtering:** A global search bar with filters to quickly find students by name, ID, grade level, or current status.
+- **Document Vault:** Ability to upload and view PDFs/Images for student records (e.g., medical certificates, report cards).
+
+### 3. UI/UX & Design Guidelines
+- **Design System:** Use a clean, professional, and accessible design. Use a soft color palette (e.g., slate, blue, and white) suitable for an educational environment.
+- **Layout:** Use a persistent sidebar navigation for desktop and a collapsible hamburger menu for mobile. Include a top header with the user profile, notifications, and global search.
+- **Data Tables:** Use highly interactive data tables (with pagination, sorting, and row selection) for the student directory.
+- **Mock Data:** Please generate a rich set of realistic mock data (at least 20 students, varied grades, and attendance records) so the dashboard and charts look populated and functional immediately.
+
+### 4. Database Schema (Prisma)
+Please set up the Prisma schema with the following core models:
+- `User` (id, name, email, role [ADMIN, TEACHER, STUDENT], passwordHash)
+- `Student` (id, userId, studentId, dob, gradeLevel, status, emergencyContact)
+- `Attendance` (id, studentId, date, status [PRESENT, ABSENT, LATE, EXCUSED], notes)
+- `Grade` (id, studentId, subject, score, maxScore, term, teacherId)
+- `Notification` (id, userId, message, isRead, createdAt)
+
+### Execution Steps:
+1. Initialize the Next.js project and configure Tailwind and shadcn/ui.
+2. Set up the Prisma schema and generate the client.
+3. Create the seed script to populate the database with realistic mock data.
+4. Build the core layout (Sidebar, Header) and the Analytics Dashboard.
+5. Build the Student Directory (Data tables, search, filters).
+6. Build the Student Detail page (Tabs for Profile, Grades, Attendance, Documents).
+7. Implement the Role-Based routing and UI adjustments.
+
+Please start by setting up the project structure, database schema, and seed data. Let me know when you are ready to proceed to the UI components.

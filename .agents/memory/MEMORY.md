@@ -1,0 +1,1 @@
+- [OpenAPI generation and calendar values](orval-and-calendar-values.md) — generated params names and PostgreSQL date columns need explicit workspace-safe handling.

@@ -10,6 +10,18 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Overview metrics and trends
+  - name: students
+    description: Student directory and profiles
+  - name: academics
+    description: Grades and class records
+  - name: attendance
+    description: Attendance tracking
+  - name: behavior
+    description: Behavioral and disciplinary records
+  - name: notifications
+    description: User notifications
 paths:
   /healthz:
     get:
@@ -24,7 +36,350 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard/overview:
+    get:
+      operationId: getDashboardOverview
+      tags: [dashboard]
+      summary: Get dashboard overview
+      responses:
+        "200":
+          description: Dashboard overview metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardOverview"
+  /dashboard/attendance-trend:
+    get:
+      operationId: getAttendanceTrend
+      tags: [dashboard]
+      summary: Get attendance trend
+      responses:
+        "200":
+          description: Attendance trend points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttendanceTrendPoint"
+  /students:
+    get:
+      operationId: listStudents
+      tags: [students]
+      summary: List students
+      parameters:
+        - $ref: "#/components/parameters/Search"
+        - $ref: "#/components/parameters/GradeLevel"
+        - $ref: "#/components/parameters/EnrollmentStatus"
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: Paginated student directory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentList"
+    post:
+      operationId: createStudent
+      tags: [students]
+      summary: Create a student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentInput"
+      responses:
+        "201":
+          description: Student created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+  /students/{id}:
+    get:
+      operationId: getStudent
+      tags: [students]
+      summary: Get a student profile
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Student profile with academic and attendance summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDetail"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      operationId: updateStudent
+      tags: [students]
+      summary: Update a student profile
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentUpdate"
+      responses:
+        "200":
+          description: Updated student
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+    delete:
+      operationId: deleteStudent
+      tags: [students]
+      summary: Delete a student
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Student deleted
+  /students/{id}/grades:
+    get:
+      operationId: listStudentGrades
+      tags: [academics]
+      summary: List grades for a student
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Student grades
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Grade"
+    post:
+      operationId: createStudentGrade
+      tags: [academics]
+      summary: Add a grade for a student
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GradeInput"
+      responses:
+        "201":
+          description: Grade created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grade"
+  /grades/{id}:
+    patch:
+      operationId: updateGrade
+      tags: [academics]
+      summary: Update a grade
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GradeUpdate"
+      responses:
+        "200":
+          description: Updated grade
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grade"
+  /students/{id}/attendance:
+    get:
+      operationId: listStudentAttendance
+      tags: [attendance]
+      summary: List attendance records for a student
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Attendance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Attendance"
+    post:
+      operationId: createStudentAttendance
+      tags: [attendance]
+      summary: Add an attendance record
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttendanceInput"
+      responses:
+        "201":
+          description: Attendance record created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attendance"
+  /attendance/{id}:
+    patch:
+      operationId: updateAttendance
+      tags: [attendance]
+      summary: Update attendance status
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttendanceUpdate"
+      responses:
+        "200":
+          description: Updated attendance record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attendance"
+  /students/{id}/behavior:
+    get:
+      operationId: listStudentBehavior
+      tags: [behavior]
+      summary: List behavior logs for a student
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Behavior logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BehaviorLog"
+    post:
+      operationId: createStudentBehavior
+      tags: [behavior]
+      summary: Add a behavior log
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BehaviorLogInput"
+      responses:
+        "201":
+          description: Behavior log created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BehaviorLog"
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications
+      responses:
+        "200":
+          description: Current user notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+  /notifications/{id}/read:
+    patch:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark a notification as read
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Updated notification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+    Search:
+      name: search
+      in: query
+      required: false
+      schema:
+        type: string
+    GradeLevel:
+      name: gradeLevel
+      in: query
+      required: false
+      schema:
+        type: string
+    EnrollmentStatus:
+      name: status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [ACTIVE, INACTIVE, GRADUATED, ON_LEAVE]
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    DateFrom:
+      name: dateFrom
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    DateTo:
+      name: dateTo
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +388,180 @@ components:
           type: string
       required:
         - status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    Student:
+      type: object
+      required: [id, studentId, name, dob, gradeLevel, status, email, phone, emergencyContactName, emergencyContactPhone]
+      properties:
+        id: { type: integer }
+        studentId: { type: string }
+        name: { type: string }
+        dob: { type: string, format: date }
+        gradeLevel: { type: string }
+        status: { type: string, enum: [ACTIVE, INACTIVE, GRADUATED, ON_LEAVE] }
+        email: { type: string }
+        phone: { type: string }
+        emergencyContactName: { type: string }
+        emergencyContactPhone: { type: string }
+        avatarUrl: { type: ["string", "null"] }
+        gpa: { type: number }
+        attendanceRate: { type: number }
+        homeroom: { type: ["string", "null"] }
+    StudentInput:
+      type: object
+      required: [studentId, name, dob, gradeLevel, status, email, phone, emergencyContactName, emergencyContactPhone]
+      properties:
+        studentId: { type: string, minLength: 1 }
+        name: { type: string, minLength: 1 }
+        dob: { type: string, format: date }
+        gradeLevel: { type: string }
+        status: { type: string, enum: [ACTIVE, INACTIVE, GRADUATED, ON_LEAVE] }
+        email: { type: string }
+        phone: { type: string }
+        emergencyContactName: { type: string }
+        emergencyContactPhone: { type: string }
+        avatarUrl: { type: ["string", "null"] }
+        homeroom: { type: ["string", "null"] }
+    StudentUpdate:
+      allOf:
+        - $ref: "#/components/schemas/StudentInput"
+    StudentList:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/Student" }
+        total: { type: integer }
+        page: { type: integer }
+        pageSize: { type: integer }
+    StudentDetail:
+      allOf:
+        - $ref: "#/components/schemas/Student"
+        - type: object
+          required: [classes, recentAttendance, recentGrades, behaviorCount]
+          properties:
+            classes:
+              type: array
+              items: { type: string }
+            recentAttendance:
+              type: array
+              items: { $ref: "#/components/schemas/Attendance" }
+            recentGrades:
+              type: array
+              items: { $ref: "#/components/schemas/Grade" }
+            behaviorCount: { type: integer }
+    Grade:
+      type: object
+      required: [id, studentId, subject, score, maxScore, term, teacherName, updatedAt]
+      properties:
+        id: { type: integer }
+        studentId: { type: integer }
+        subject: { type: string }
+        score: { type: number }
+        maxScore: { type: number }
+        term: { type: string }
+        teacherName: { type: string }
+        updatedAt: { type: string, format: date-time }
+    GradeInput:
+      type: object
+      required: [subject, score, maxScore, term]
+      properties:
+        subject: { type: string }
+        score: { type: number, minimum: 0 }
+        maxScore: { type: number, minimum: 1 }
+        term: { type: string }
+    GradeUpdate:
+      allOf:
+        - $ref: "#/components/schemas/GradeInput"
+    Attendance:
+      type: object
+      required: [id, studentId, date, status, notes]
+      properties:
+        id: { type: integer }
+        studentId: { type: integer }
+        date: { type: string, format: date }
+        status: { type: string, enum: [PRESENT, ABSENT, LATE, EXCUSED] }
+        notes: { type: ["string", "null"] }
+    AttendanceInput:
+      type: object
+      required: [date, status]
+      properties:
+        date: { type: string, format: date }
+        status: { type: string, enum: [PRESENT, ABSENT, LATE, EXCUSED] }
+        notes: { type: ["string", "null"] }
+    AttendanceUpdate:
+      allOf:
+        - $ref: "#/components/schemas/AttendanceInput"
+    BehaviorLog:
+      type: object
+      required: [id, studentId, type, note, createdAt, authorName]
+      properties:
+        id: { type: integer }
+        studentId: { type: integer }
+        type: { type: string, enum: [NOTE, WARNING, ACHIEVEMENT] }
+        note: { type: string }
+        createdAt: { type: string, format: date-time }
+        authorName: { type: string }
+    BehaviorLogInput:
+      type: object
+      required: [type, note]
+      properties:
+        type: { type: string, enum: [NOTE, WARNING, ACHIEVEMENT] }
+        note: { type: string, minLength: 1 }
+    DashboardOverview:
+      type: object
+      required: [totalStudents, activeStudents, attendanceRate, averageGpa, atRiskCount, recentAlerts, gradeDistribution]
+      properties:
+        totalStudents: { type: integer }
+        activeStudents: { type: integer }
+        attendanceRate: { type: number }
+        averageGpa: { type: number }
+        atRiskCount: { type: integer }
+        recentAlerts:
+          type: array
+          items: { $ref: "#/components/schemas/Alert" }
+        gradeDistribution:
+          type: array
+          items: { $ref: "#/components/schemas/GradeDistribution" }
+    AttendanceTrendPoint:
+      type: object
+      required: [label, rate, present, absent, late]
+      properties:
+        label: { type: string }
+        rate: { type: number }
+        present: { type: integer }
+        absent: { type: integer }
+        late: { type: integer }
+    Alert:
+      type: object
+      required: [id, type, message, studentName, createdAt, severity]
+      properties:
+        id: { type: integer }
+        type: { type: string, enum: [ATTENDANCE, GRADE, BEHAVIOR] }
+        message: { type: string }
+        studentName: { type: string }
+        createdAt: { type: string, format: date-time }
+        severity: { type: string, enum: [INFO, WARNING, HIGH] }
+    GradeDistribution:
+      type: object
+      required: [label, count, color]
+      properties:
+        label: { type: string }
+        count: { type: integer }
+        color: { type: string }
+    Notification:
+      type: object
+      required: [id, message, isRead, createdAt, kind]
+      properties:
+        id: { type: integer }
+        message: { type: string }
+        isRead: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        kind: { type: string, enum: [ATTENDANCE, GRADE, BEHAVIOR, SYSTEM] }
 
