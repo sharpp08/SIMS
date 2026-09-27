@@ -43,6 +43,47 @@ const lastNames = [
   "Villanueva",
   "Lim",
 ];
+const additionalStudentNames = [
+  "ALOJIPAN",
+  "AGARCIA",
+  "OBISPO",
+  "ATERAMBOLO",
+  "BUCAD",
+  "SAPIO",
+  "UNIANA",
+  "ABDULLAH",
+  "QUANICO",
+  "NEAR",
+  "NAVIDAD",
+  "BLANCIA",
+  "CABRILLOS",
+  "NACIONALES",
+  "VEJARASCO",
+  "ZAMORA",
+  "GILLADO",
+  "JABEZ",
+  "SALAZAR",
+  "CANJA",
+  "EVANGELIO",
+  "LABIOS",
+  "DEL ROSARIO",
+  "PAEZ",
+  "AMENDOZA",
+  "AGOBOY",
+  "AERPILUA",
+  "ACERNA",
+  "SONGCOG",
+  "PIDO",
+  "CANJA, MARK",
+  "OSTAN",
+  "NOBLEZADA",
+  "ALAGAO",
+  "SUMANDE",
+];
+const studentNames = [
+  ...firstNames.map((firstName, index) => `${firstName} ${lastNames[index % lastNames.length]}`),
+  ...additionalStudentNames,
+];
 const subjects = ["Mathematics", "Science", "English", "World History"];
 const teachers = [
   { name: "Marisol Chen", email: "marisol.chen@northstar.edu" },
@@ -71,8 +112,8 @@ async function seed(): Promise<void> {
   const [admin] = await db
     .insert(usersTable)
     .values({
-      name: "Jordan Williams",
-      email: "jordan.williams@northstar.edu",
+      name: "Mr. Lhyan Conato",
+      email: "lhyan.conato@northstar.edu",
       role: "ADMIN",
     })
     .returning();
@@ -85,9 +126,9 @@ async function seed(): Promise<void> {
   const studentUsers = await db
     .insert(usersTable)
     .values(
-      firstNames.map((firstName, index) => ({
-        name: `${firstName} ${lastNames[index % lastNames.length]}`,
-        email: `${firstName.toLowerCase()}.${lastNames[index % lastNames.length].toLowerCase().replaceAll(" ", "")}@students.northstar.edu`,
+      studentNames.map((name) => ({
+        name,
+        email: `${name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.+|\.+$/g, "")}@students.northstar.edu`,
         role: "STUDENT" as const,
       })),
     )
@@ -96,11 +137,10 @@ async function seed(): Promise<void> {
   const studentRows = await db
     .insert(studentsTable)
     .values(
-      firstNames.map((firstName, index) => {
+      studentNames.map((name, index) => {
         const status: "ACTIVE" | "INACTIVE" | "GRADUATED" | "ON_LEAVE" =
           index === 17 ? "ON_LEAVE" : index === 18 ? "GRADUATED" : "ACTIVE";
         const grade = `${9 + (index % 4)}`;
-        const name = `${firstName} ${lastNames[index % lastNames.length]}`;
         return {
           userId: studentUsers[index].id,
           studentId: `NS-${String(2026001 + index)}`,
