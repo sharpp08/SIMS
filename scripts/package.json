@@ -6,6 +6,7 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "add:sims-students": "tsx ./src/add-sims-students.ts",
+    "remove:old-sims-students": "tsx ./src/remove-old-sims-students.ts",
     "seed:sims": "tsx ./src/seed-sims.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

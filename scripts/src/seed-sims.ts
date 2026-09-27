@@ -9,28 +9,6 @@ import {
   usersTable,
 } from "@workspace/db";
 
-const firstNames = [
-  "Avery",
-  "Maya",
-  "Theo",
-  "Lina",
-  "Ethan",
-  "Sofia",
-  "Noah",
-  "Amara",
-  "Caleb",
-  "Leila",
-  "Miles",
-  "Nora",
-  "Julian",
-  "Zoe",
-  "Mateo",
-  "Iris",
-  "Asher",
-  "Chloe",
-  "Dylan",
-  "Elena",
-];
 const lastNames = [
   "Santos",
   "Reyes",
@@ -81,7 +59,6 @@ const additionalStudentNames = [
   "SUMANDE",
 ];
 const studentNames = [
-  ...firstNames.map((firstName, index) => `${firstName} ${lastNames[index % lastNames.length]}`),
   ...additionalStudentNames,
 ];
 const subjects = ["Mathematics", "Science", "English", "World History"];
